@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ээж минь ❀ Төрсөн өдрийн мэнд</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Noto+Serif+Mongolian:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::after, *::before { padding: 0; margin: 0; box-sizing: border-box; }
+
+  :root {
+    --sky-top: #2a1810;
+    --sky-mid: #6b3a2a;
+    --sky-warm: #c97744;
+    --sky-glow: #f4b860;
+    --sky-pale: #f9d896;
+    --grass: #8b6332;
+    --grass-deep: #5a3f20;
+    --gold: #d4a04c;
+    --rose: #c97a8a;
+    --plum: #7a4560;
+    --cream: #faf3e3;
+    --ink: #2a1810;
+    --silk: rgba(250, 243, 227, 0.94);
+    --night: #0a0e1a;
+  }
+
+  html, body {
+    overflow-x: hidden;
+    background: var(--sky-top);
+    color: var(--ink);
+    font-family: 'Cormorant Garamond', 'Noto Serif Mongolian', serif;
+    min-height: 100vh;
+    -webkit-tap-highlight-color: transparent;
+    position: relative;
+  }
+
+  /* ───────── ДУУ ТОГЛУУЛАХ ТОВЧ ─────────  */
+  .music-toggle {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    z-index: 1000;
+    background: rgba(42, 24, 16, 0.7);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  }
+  .music-toggle:active { transform: scale(0.92); }
+  .music-toggle.playing {
+    background: rgba(212, 160, 76, 0.3);
+    box-shadow: 0 0 20px rgba(212, 160, 76, 0.5);
+  }
+  .music-hint {
+    position: fixed;
+    top: 1rem;
+    right: 4.5rem;
+    background: rgba(42, 24, 16, 0.85);
+    color: var(--cream);
+    padding: 0.6rem 1rem;
+    border-radius: 24px;
+    font-size: 0.8rem;
+    z-index: 999;
+    opacity: 0;
+    animation: hint-show 4s 2s ease-in-out forwards;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+  @keyframes hint-show {
+    0% { opacity: 0; transform: translateX(20px); }
+    20%, 70% { opacity: 1; transform: translateX(0); }
+    100% { opacity: 0; transform: translateX(20px); }
+  }
+
+  /* ───────── ТЭНГЭР, НАР ─────────  */
+  .sky {
+    position: fixed; inset: 0;
+    background:
+      radial-gradient(ellipse at 15% 75%, rgba(244, 184, 96, 0.55) 0%, transparent 45%),
+      radial-gradient(ellipse at 80% 20%, rgba(122, 69, 96, 0.4) 0%, transparent 55%),
+      linear-gradient(180deg, var(--sky-top) 0%, var(--sky-mid) 35%, var(--sky-warm) 65%, var(--sky-glow) 85%, var(--sky-pale) 100%);
+    z-index: 0;
+    pointer-events: none;
+  }
+  .sun {
+    position: fixed; left: -8vw; bottom: 12vh;
+    width: 60vw; height: 60vw; max-width: 420px; max-height: 420px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 240, 200, 0.95) 0%, rgba(244, 184, 96, 0.7) 30%, rgba(201, 119, 68, 0.3) 60%, transparent 75%);
+    filter: blur(2px);
+    z-index: 1;
+    pointer-events: none;
+    animation: sun-pulse 8s ease-in-out infinite;
+  }
+  @keyframes sun-pulse {
+    0%, 100% { opacity: 0.85; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.04); }
+  }
+  .mountains {
+    position: fixed; bottom: 18vh; left: 0; width: 100%; height: 12vh;
+    background: linear-gradient(180deg, transparent 0%, rgba(42, 24, 16, 0.4) 100%);
+    clip-path: polygon(0 100%, 0 60%, 8% 50%, 15% 65%, 22% 45%, 30% 55%, 38% 40%, 47% 55%, 55% 35%, 63% 50%, 72% 45%, 80% 55%, 88% 40%, 95% 50%, 100% 45%, 100% 100%);
+    z-index: 1; opacity: 0.6; pointer-events: none;
+  }
+  .ground {
+    position: fixed; bottom: 0; left: 0; width: 100%; height: 22vh;
+    background: linear-gradient(180deg, var(--grass) 0%, var(--grass-deep) 100%);
+    z-index: 1; pointer-events: none;
+    box-shadow: 0 -20px 60px rgba(0,0,0,0.3) inset;
+  }
+  .cloud {
+    position: fixed; background: rgba(250, 243, 227, 0.15);
+    border-radius: 100px; filter: blur(8px); z-index: 1;
+    pointer-events: none;
+    animation: drift 80s linear infinite;
+  }
+  .cloud-1 { width: 200px; height: 30px; top: 12%; left: 20%; }
+  .cloud-2 { width: 280px; height: 35px; top: 8%; left: 60%; animation-duration: 100s; animation-delay: -30s; }
+  .cloud-3 { width: 160px; height: 22px; top: 18%; left: 75%; animation-duration: 90s; animation-delay: -60s; }
+  @keyframes drift {
+    from { transform: translateX(0); }
+    to { transform: translateX(-110vw); }
+  }
+
+  /* ───────── НЭЭЛТТЭЙ ХЭСЭГ ─────────  */
+  .opening {
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 3rem 1.5rem;
+    text-align: center;
+    position: relative;
+    z-index: 10;
+  }
+  .ornament {
+    font-size: 1.2rem; color: var(--gold);
+    letter-spacing: 1.2em;
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: fade-up 1.6s 0.3s ease-out forwards;
+  }
+  .opening h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300; font-style: italic;
+    font-size: clamp(2rem, 9vw, 4.5rem);
+    color: var(--cream);
+    letter-spacing: 0.02em; line-height: 1.1;
+    margin-bottom: 0.4rem;
+    opacity: 0;
+    animation: fade-up 1.8s 0.6s ease-out forwards;
+    text-shadow: 0 4px 30px rgba(42, 24, 16, 0.5);
+  }
+  .opening h2 {
+    font-family: 'Noto Serif Mongolian', 'Cormorant Garamond', serif;
+    font-weight: 500;
+    font-size: clamp(1.3rem, 5.5vw, 2.6rem);
+    color: var(--gold);
+    letter-spacing: 0.06em;
+    margin-bottom: 2rem;
+    opacity: 0;
+    animation: fade-up 1.8s 1s ease-out forwards;
+  }
+  @keyframes fade-up {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .portrait-frame {
+    position: relative;
+    width: clamp(220px, 70vw, 340px);
+    margin: 1.5rem auto;
+    opacity: 0;
+    animation: fade-up 2s 1.4s ease-out forwards;
+  }
+  .portrait-frame::before {
+    content: ''; position: absolute; inset: -14px;
+    border: 1px solid rgba(212, 160, 76, 0.5);
+    pointer-events: none;
+  }
+  .portrait-frame::after {
+    content: ''; position: absolute; inset: -6px;
+    border: 1px solid rgba(212, 160, 76, 0.8);
+    pointer-events: none;
+  }
+  .corners { position: absolute; inset: -18px; pointer-events: none; }
+  .corner { position: absolute; width: 22px; height: 22px; border: 2px solid var(--gold); }
+  .corner.tl { top: 0; left: 0; border-right: none; border-bottom: none; }
+  .corner.tr { top: 0; right: 0; border-left: none; border-bottom: none; }
+  .corner.bl { bottom: 0; left: 0; border-right: none; border-top: none; }
+  .corner.br { bottom: 0; right: 0; border-left: none; border-top: none; }
+  .portrait-frame img {
+    width: 100%; height: auto; display: block;
+    filter: sepia(0.05) saturate(1.05);
+    box-shadow: 0 30px 80px rgba(42, 24, 16, 0.5), 0 0 40px rgba(244, 184, 96, 0.3);
+  }
+  .opening .dedication {
+    margin-top: 2rem;
+    max-width: 540px;
+    font-size: clamp(0.95rem, 3.5vw, 1.2rem);
+    line-height: 1.85;
+    color: var(--silk);
+    font-style: italic;
+    font-weight: 300;
+    opacity: 0;
+    animation: fade-up 2s 1.8s ease-out forwards;
+    padding: 0 0.5rem;
+  }
+  .scroll-hint {
+    margin-top: 2.5rem;
+    color: var(--gold);
+    font-size: 0.75rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    opacity: 0;
+    animation: fade-up 2s 2.4s ease-out forwards, gentle-pulse 3s 3s ease-in-out infinite;
+  }
+  @keyframes gentle-pulse {
+    0%, 100% { opacity: 0.6; transform: translateY(0); }
+    50% { opacity: 1; transform: translateY(6px); }
+  }
+
+  /* ───────── ЦЭЦЭРЛЭГИЙН ХЭСЭГ ─────────  */
+  .garden-section {
+    min-height: 100vh;
+    padding: 4rem 1rem 3rem;
+    position: relative;
+    z-index: 10;
+    background: linear-gradient(180deg, transparent 0%, rgba(42, 24, 16, 0.3) 30%, rgba(42, 24, 16, 0.6) 100%);
+  }
+  .garden-intro {
+    max-width: 640px;
+    margin: 0 auto 2rem;
+    text-align: center;
+    color: var(--cream);
+    padding: 0 0.5rem;
+  }
+  .garden-intro .label {
+    font-size: 0.7rem; letter-spacing: 0.4em;
+    color: var(--gold); text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+  .garden-intro h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic; font-weight: 300;
+    font-size: clamp(1.6rem, 6vw, 2.6rem);
+    line-height: 1.2; margin-bottom: 1rem;
+  }
+  .garden-intro p {
+    font-size: clamp(0.95rem, 3.5vw, 1.05rem);
+    line-height: 1.75; color: var(--silk);
+    font-weight: 300; max-width: 520px;
+    margin: 0 auto;
+  }
+  .plant-button {
+    display: block;
+    margin: 2rem auto 1rem;
+    background: transparent;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(0.95rem, 3.5vw, 1.05rem);
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    padding: 0.85rem 2rem;
+    cursor: pointer;
+    transition: all 0.4s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .plant-button::before {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(120deg, transparent, rgba(212, 160, 76, 0.2), transparent);
+    transform: translateX(-100%);
+    transition: transform 0.6s ease;
+  }
+  .plant-button:active { background: rgba(212, 160, 76, 0.15); transform: scale(0.98); }
+  .plant-button:hover::before { transform: translateX(100%); }
+  .plant-button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .counter {
+    text-align: center; color: var(--silk);
+    font-style: italic; font-size: 0.9rem;
+    margin-bottom: 1.5rem; opacity: 0.8;
+  }
+  .counter .num {
+    color: var(--gold);
+    font-size: 1.2rem; font-weight: 500;
+    font-style: normal;
+  }
+
+  .garden { max-width: 700px; margin: 0 auto; padding: 1rem 0; }
+  .flower-card {
+    position: relative;
+    margin: 2rem auto;
+    max-width: 460px;
+    opacity: 0;
+    transform: translateY(40px) scale(0.95);
+    animation: bloom 1.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  }
+  .flower-card .plant-button {
+    margin-top: 2rem;
+  }
+  .flower-card .counter {
+    margin-top: 0.5rem;
+    margin-bottom: 1rem;
+  }
+  @keyframes bloom {
+    0% { opacity: 0; transform: translateY(40px) scale(0.85); }
+    60% { opacity: 1; }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  .flower-svg {
+    display: block;
+    margin: 0 auto;
+    width: clamp(140px, 40vw, 180px);
+    height: auto;
+  }
+  .message-box {
+    background: var(--silk);
+    border: 1px solid rgba(212, 160, 76, 0.4);
+    padding: 1.5rem 1.4rem 1.6rem;
+    margin: -15px 0.5rem 0;
+    position: relative;
+    box-shadow: 0 20px 60px rgba(42, 24, 16, 0.4), 0 0 0 1px rgba(212, 160, 76, 0.2);
+    backdrop-filter: blur(10px);
+  }
+  .message-box::before {
+    content: ''; position: absolute;
+    top: 6px; left: 6px; right: 6px; bottom: 6px;
+    border: 1px solid rgba(212, 160, 76, 0.4);
+    pointer-events: none;
+  }
+  .message-box .ornament-small {
+    text-align: center; color: var(--gold);
+    font-size: 0.9rem; letter-spacing: 0.8em;
+    margin-bottom: 0.6rem;
+  }
+  .message-box .flower-name {
+    text-align: center;
+    font-family: 'Noto Serif Mongolian', serif;
+    color: var(--plum);
+    font-size: clamp(1rem, 3.8vw, 1.15rem);
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.3rem;
+  }
+  .message-box .flower-latin {
+    text-align: center;
+    font-style: italic;
+    color: var(--gold);
+    font-size: 0.78rem;
+    margin-bottom: 0.9rem;
+    opacity: 0.85;
+  }
+  .message-box .text {
+    font-family: 'Noto Serif Mongolian', serif;
+    color: var(--ink);
+    font-size: clamp(0.95rem, 3.6vw, 1.05rem);
+    line-height: 1.8;
+    text-align: center;
+    font-weight: 400;
+  }
+
+  /* SVG цэцгийн анимаци */
+  .stem { stroke-dasharray: 200; stroke-dashoffset: 200; animation: draw-stem 1.2s ease-out forwards; }
+  .leaf, .petal { transform-origin: var(--ox, 50%) var(--oy, 100%); transform: scale(0); }
+  .leaf { animation: grow-leaf 0.8s 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+  .petal { animation: grow-petal 1s 1s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+  .center { transform-origin: 50% 50%; transform: scale(0); animation: grow-center 0.6s 1.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+  @keyframes draw-stem { to { stroke-dashoffset: 0; } }
+  @keyframes grow-leaf { to { transform: scale(1); } }
+  @keyframes grow-petal { to { transform: scale(1) rotate(var(--r, 0deg)); } }
+  @keyframes grow-center { to { transform: scale(1); } }
+
+  /* ───────── ШИДЭТ ЦЭЦЭГ — magical garden ─────────  */
+  .magical-overlay {
+    position: fixed; inset: 0;
+    background: var(--night);
+    z-index: 9999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 2s ease;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .magical-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .magical-night {
+    position: absolute; inset: 0;
+    filter: blur(0.1vmin);
+    background-image:
+      radial-gradient(ellipse at top, transparent 0%, var(--night)),
+      radial-gradient(ellipse at bottom, var(--night), rgba(145, 233, 255, 0.18)),
+      repeating-linear-gradient(220deg, #000 0px, #000 19px, transparent 19px, transparent 22px),
+      repeating-linear-gradient(189deg, #000 0px, #000 19px, transparent 19px, transparent 22px),
+      repeating-linear-gradient(148deg, #000 0px, #000 19px, transparent 19px, transparent 22px),
+      linear-gradient(90deg, #00fffa, #f0f0f0);
+  }
+  .magical-stars { position: absolute; inset: 0; pointer-events: none; }
+  .magical-stars .star {
+    position: absolute;
+    width: 2px; height: 2px;
+    background: #fff; border-radius: 50%;
+    box-shadow: 0 0 4px #fff, 0 0 8px rgba(145, 233, 255, 0.5);
+    animation: twinkle 3s infinite;
+  }
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 1; }
+  }
+  .magical-title {
+    position: absolute;
+    top: 4%;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    color: var(--cream);
+    z-index: 10;
+    opacity: 0;
+    animation: title-fade 2s 1s forwards;
+    width: 92%;
+    max-width: 460px;
+  }
+  @keyframes title-fade { to { opacity: 1; } }
+  .magical-title .ornament {
+    color: #6bf0ff;
+    letter-spacing: 0.5em;
+    margin-bottom: 0.6rem;
+    font-size: 0.8rem;
+  }
+  .magical-title h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(1.1rem, 4vw, 1.6rem);
+    color: #a7ffee;
+    text-shadow: 0 0 20px rgba(167, 255, 238, 0.6), 0 2px 8px rgba(0,0,0,0.8);
+    letter-spacing: 0.04em;
+    line-height: 1.3;
+  }
+  .magical-message {
+    position: absolute;
+    top: 22%;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    color: var(--cream);
+    z-index: 10;
+    opacity: 0;
+    animation: title-fade 2s 5s forwards;
+    width: 92%;
+    max-width: 460px;
+    padding: 0 1rem;
+  }
+  .magical-message p {
+    font-family: 'Noto Serif Mongolian', serif;
+    font-size: clamp(0.85rem, 3.2vw, 1rem);
+    line-height: 1.7;
+    color: var(--silk);
+    font-style: italic;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.8);
+    margin-bottom: 0.5rem;
+  }
+  .magical-message .signature {
+    margin-top: 0.6rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    color: #6bf0ff;
+    font-size: clamp(0.8rem, 3vw, 0.95rem);
+    text-shadow: 0 2px 10px rgba(0,0,0,0.8);
+  }
+  .magical-message .heart {
+    color: var(--rose);
+    animation: heart-beat 2s ease-in-out infinite;
+    display: inline-block;
+  }
+  @keyframes heart-beat {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.15); }
+  }
+
+  /* ─── Шидэт цэцгийн CSS — Yup Nguyen маягийн ─── */
+  .flowers-stage {
+    position: relative;
+    transform: scale(0.7);
+    bottom: 0;
+  }
+  @media (min-width: 600px) { .flowers-stage { transform: scale(0.85); } }
+
+  .mflower {
+    position: absolute;
+    bottom: 10vmin;
+    transform-origin: bottom center;
+    z-index: 10;
+    --fl-speed: 0.8s;
+  }
+  .mflower--1 { animation: moving-flower-1 4s linear infinite; }
+  .mflower--1 .mflower__line { height: 70vmin; animation-delay: 0.3s; }
+  .mflower--1 .mflower__line__leaf--1 { animation: blooming-leaf-right var(--fl-speed) 1.6s backwards; }
+  .mflower--1 .mflower__line__leaf--2 { animation: blooming-leaf-right var(--fl-speed) 1.4s backwards; }
+  .mflower--1 .mflower__line__leaf--3 { animation: blooming-leaf-left var(--fl-speed) 1.2s backwards; }
+  .mflower--1 .mflower__line__leaf--4 { animation: blooming-leaf-left var(--fl-speed) 1s backwards; }
+  .mflower--1 .mflower__line__leaf--5 { animation: blooming-leaf-right var(--fl-speed) 1.8s backwards; }
+  .mflower--1 .mflower__line__leaf--6 { animation: blooming-leaf-left var(--fl-speed) 2s backwards; }
+  .mflower--2 {
+    left: 50%;
+    transform: rotate(20deg);
+    animation: moving-flower-2 4s linear infinite;
+  }
+  .mflower--2 .mflower__line { height: 60vmin; animation-delay: 0.6s; }
+  .mflower--2 .mflower__line__leaf--1 { animation: blooming-leaf-right var(--fl-speed) 1.9s backwards; }
+  .mflower--2 .mflower__line__leaf--2 { animation: blooming-leaf-right var(--fl-speed) 1.7s backwards; }
+  .mflower--2 .mflower__line__leaf--3 { animation: blooming-leaf-left var(--fl-speed) 1.5s backwards; }
+  .mflower--2 .mflower__line__leaf--4 { animation: blooming-leaf-left var(--fl-speed) 1.3s backwards; }
+  .mflower--3 {
+    left: 50%;
+    transform: rotate(-15deg);
+    animation: moving-flower-3 4s linear infinite;
+  }
+  .mflower--3 .mflower__line { animation-delay: 0.9s; }
+  .mflower--3 .mflower__line__leaf--1 { animation: blooming-leaf-right var(--fl-speed) 2.5s backwards; }
+  .mflower--3 .mflower__line__leaf--2 { animation: blooming-leaf-right var(--fl-speed) 2.3s backwards; }
+  .mflower--3 .mflower__line__leaf--3 { animation: blooming-leaf-left var(--fl-speed) 2.1s backwards; }
+  .mflower--3 .mflower__line__leaf--4 { animation: blooming-leaf-left var(--fl-speed) 1.9s backwards; }
+  .mflower__leafs { position: relative; animation: blooming-flower 2s backwards; }
+  .mflower__leafs--1 { animation-delay: 1.1s; }
+  .mflower__leafs--2 { animation-delay: 1.4s; }
+  .mflower__leafs--3 { animation-delay: 1.7s; }
+  .mflower__leafs::after {
+    content: ""; position: absolute;
+    left: 0; top: 0;
+    transform: translate(-50%, -100%);
+    width: 8vmin; height: 8vmin;
+    background-color: #6bf0ff;
+    filter: blur(10vmin);
+  }
+  .mflower__leaf {
+    position: absolute; bottom: 0; left: 50%;
+    width: 8vmin; height: 11vmin;
+    border-radius: 51% 49% 47% 53%/44% 45% 55% 69%;
+    background-image: linear-gradient(to top, #54b8aa, #a7ffee);
+    transform-origin: bottom center;
+    opacity: 0.9;
+    box-shadow: inset 0 0 2vmin rgba(255, 255, 255, 0.5);
+  }
+  .mflower__leaf--1 { transform: translate(-10%, 1%) rotateY(40deg) rotateX(-50deg); }
+  .mflower__leaf--2 { transform: translate(-50%, -4%) rotateX(40deg); }
+  .mflower__leaf--3 { transform: translate(-90%, 0%) rotateY(45deg) rotateX(50deg); }
+  .mflower__leaf--4 {
+    width: 8vmin; height: 8vmin;
+    transform-origin: bottom left;
+    border-radius: 4vmin 10vmin 4vmin 4vmin;
+    transform: translate(0%, 18%) rotateX(70deg) rotate(-43deg);
+    background-image: linear-gradient(to top, #39c6d6, #a7ffee);
+    z-index: 1; opacity: 0.8;
+  }
+  .mflower__white-circle {
+    position: absolute; left: -3.5vmin; top: -3vmin;
+    width: 9vmin; height: 4vmin;
+    border-radius: 50%; background-color: #fff;
+  }
+  .mflower__white-circle::after {
+    content: ""; position: absolute;
+    left: 50%; top: 45%;
+    transform: translate(-50%, -50%);
+    width: 60%; height: 60%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, #ffeb12, #ffce00);
+  }
+  .mflower__line {
+    height: 55vmin; width: 1.5vmin;
+    background-image: linear-gradient(to left, rgba(0, 0, 0, 0.2), transparent, rgba(255, 255, 255, 0.2)),
+                      linear-gradient(to top, transparent 10%, #14757a, #39c6d6);
+    box-shadow: inset 0 0 2px rgba(0, 0, 0, 0.5);
+    animation: grow-flower-tree 4s backwards;
+  }
+  .mflower__line__leaf {
+    --w: 7vmin;
+    --h: calc(var(--w) + 2vmin);
+    position: absolute; top: 20%; left: 90%;
+    width: var(--w); height: var(--h);
+    border-top-right-radius: var(--h);
+    border-bottom-left-radius: var(--h);
+    background-image: linear-gradient(to top, rgba(20, 117, 122, 0.4), #39c6d6);
+  }
+  .mflower__line__leaf--1 { transform: rotate(70deg) rotateY(30deg); }
+  .mflower__line__leaf--2 { top: 45%; transform: rotate(70deg) rotateY(30deg); }
+  .mflower__line__leaf--3, .mflower__line__leaf--4, .mflower__line__leaf--6 {
+    border-top-right-radius: 0;
+    border-bottom-left-radius: 0;
+    border-top-left-radius: var(--h);
+    border-bottom-right-radius: var(--h);
+    left: -460%; top: 12%;
+    transform: rotate(-70deg) rotateY(30deg);
+  }
+  .mflower__line__leaf--4 { top: 40%; }
+  .mflower__line__leaf--5 { top: 0; transform-origin: left; transform: rotate(70deg) rotateY(30deg) scale(0.6); }
+  .mflower__line__leaf--6 { top: -2%; left: -450%; transform-origin: right; transform: rotate(-70deg) rotateY(30deg) scale(0.6); }
+  .mflower__light {
+    position: absolute; bottom: 0vmin;
+    width: 1vmin; height: 1vmin;
+    background-color: #fffb00;
+    border-radius: 50%;
+    filter: blur(0.2vmin);
+    animation: light-ans 4s linear infinite backwards;
+  }
+  .mflower__light:nth-child(odd) { background-color: #23f0ff; }
+  .mflower__light--1 { left: -2vmin; animation-delay: 1s; }
+  .mflower__light--2 { left: 3vmin; animation-delay: 0.5s; }
+  .mflower__light--3 { left: -6vmin; animation-delay: 0.3s; }
+  .mflower__light--4 { left: 6vmin; animation-delay: 0.9s; }
+  .mflower__light--5 { left: -1vmin; animation-delay: 1.5s; }
+  .mflower__light--6 { left: -4vmin; animation-delay: 3s; }
+  .mflower__light--7 { left: 3vmin; animation-delay: 2s; }
+  .mflower__light--8 { left: -6vmin; animation-delay: 3.5s; }
+  .mflower__grass {
+    --c: #159faa;
+    --line-w: 1.5vmin;
+    position: absolute;
+    bottom: 12vmin; left: -7vmin;
+    display: flex; flex-direction: column;
+    align-items: flex-end;
+    z-index: 20;
+    transform-origin: bottom center;
+    transform: rotate(-48deg) rotateY(40deg);
+  }
+  .mflower__grass--1 { animation: moving-grass 2s linear infinite; }
+  .mflower__grass--2 {
+    left: 2vmin; bottom: 10vmin;
+    transform: scale(0.5) rotate(75deg) rotateX(10deg) rotateY(-200deg);
+    opacity: 0.8; z-index: 0;
+    animation: moving-grass--2 1.5s linear infinite;
+  }
+  .mflower__grass--top {
+    width: 7vmin; height: 10vmin;
+    border-top-right-radius: 100%;
+    border-right: var(--line-w) solid var(--c);
+    transform-origin: bottom center;
+    transform: rotate(-2deg);
+  }
+  .mflower__grass--bottom {
+    margin-top: -2px; width: var(--line-w); height: 25vmin;
+    background-image: linear-gradient(to top, transparent, var(--c));
+  }
+  .mflower__grass__leaf {
+    --size: 10vmin;
+    position: absolute;
+    width: calc(var(--size) * 2.1);
+    height: var(--size);
+    border-top-left-radius: var(--size);
+    border-top-right-radius: var(--size);
+    background-image: linear-gradient(to top, transparent, transparent 30%, var(--c));
+    z-index: 100;
+  }
+  .mflower__grass__leaf--1 { top: -6%; left: 30%; --size: 6vmin; transform: rotate(-20deg); animation: gg1 2s 2.6s backwards; }
+  @keyframes gg1 { 0% { transform-origin: bottom left; transform: rotate(-20deg) scale(0); } }
+  .mflower__grass__leaf--2 { top: -5%; left: -110%; --size: 6vmin; transform: rotate(10deg); animation: gg2 2s 2.4s linear backwards; }
+  @keyframes gg2 { 0% { transform-origin: bottom right; transform: rotate(10deg) scale(0); } }
+  .mflower__grass__leaf--3 { top: 5%; left: 60%; --size: 8vmin; transform: rotate(-18deg) rotateX(-20deg); animation: gg3 2s 2.2s linear backwards; }
+  @keyframes gg3 { 0% { transform-origin: bottom left; transform: rotate(-18deg) rotateX(-20deg) scale(0); } }
+  .mflower__grass__leaf--4 { top: 6%; left: -135%; --size: 8vmin; transform: rotate(2deg); animation: gg4 2s 2s linear backwards; }
+  @keyframes gg4 { 0% { transform-origin: bottom right; transform: rotate(2deg) scale(0); } }
+  .mflower__grass__leaf--5 { top: 20%; left: 60%; --size: 10vmin; transform: rotate(-24deg) rotateX(-20deg); animation: gg5 2s 1.8s linear backwards; }
+  @keyframes gg5 { 0% { transform-origin: bottom left; transform: rotate(-24deg) rotateX(-20deg) scale(0); } }
+  .mflower__grass__leaf--6 { top: 22%; left: -180%; --size: 10vmin; transform: rotate(10deg); animation: gg6 2s 1.6s linear backwards; }
+  @keyframes gg6 { 0% { transform-origin: bottom right; transform: rotate(10deg) scale(0); } }
+  .mflower__grass__leaf--7 { top: 39%; left: 70%; --size: 10vmin; transform: rotate(-10deg); animation: gg7 2s 1.4s linear backwards; }
+  @keyframes gg7 { 0% { transform-origin: bottom left; transform: rotate(-10deg) scale(0); } }
+  .mflower__grass__leaf--8 { top: 40%; left: -215%; --size: 11vmin; transform: rotate(10deg); animation: gg8 2s 1.2s linear backwards; }
+  @keyframes gg8 { 0% { transform-origin: bottom right; transform: rotate(10deg) scale(0); } }
+  .mflower__grass__overlay {
+    position: absolute; top: -10%; right: 0%;
+    width: 100%; height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    filter: blur(1.5vmin);
+    z-index: 100;
+  }
+  .grow-ans { animation: grow-ans 2s var(--d) backwards; }
+  @keyframes grow-ans { 0% { transform: scale(0); opacity: 0; } }
+  @keyframes light-ans {
+    0% { opacity: 0; transform: translateY(0vmin); }
+    25% { opacity: 1; transform: translateY(-5vmin) translateX(-2vmin); }
+    50% { opacity: 1; transform: translateY(-15vmin) translateX(2vmin); filter: blur(0.2vmin); }
+    75% { transform: translateY(-20vmin) translateX(-2vmin); filter: blur(0.2vmin); }
+    100% { transform: translateY(-30vmin); opacity: 0; filter: blur(1vmin); }
+  }
+  @keyframes moving-flower-1 { 0%, 100% { transform: rotate(2deg); } 50% { transform: rotate(-2deg); } }
+  @keyframes moving-flower-2 { 0%, 100% { transform: rotate(18deg); } 50% { transform: rotate(14deg); } }
+  @keyframes moving-flower-3 { 0%, 100% { transform: rotate(-18deg); } 50% { transform: rotate(-20deg) rotateY(-10deg); } }
+  @keyframes blooming-leaf-right { 0% { transform-origin: left; transform: rotate(70deg) rotateY(30deg) scale(0); } }
+  @keyframes blooming-leaf-left { 0% { transform-origin: right; transform: rotate(-70deg) rotateY(30deg) scale(0); } }
+  @keyframes grow-flower-tree { 0% { height: 0; border-radius: 1vmin; } }
+  @keyframes blooming-flower { 0% { transform: scale(0); } }
+  @keyframes moving-grass { 0%, 100% { transform: rotate(-48deg) rotateY(40deg); } 50% { transform: rotate(-50deg) rotateY(40deg); } }
+  @keyframes moving-grass--2 { 0%, 100% { transform: scale(0.5) rotate(75deg) rotateX(10deg) rotateY(-200deg); } 50% { transform: scale(0.5) rotate(79deg) rotateX(10deg) rotateY(-200deg); } }
+  .growing-grass { animation: growing-grass-ans 1s 2s backwards; }
+  @keyframes growing-grass-ans { 0% { transform: scale(0); } }
+</style>
+</head>
+<body>
+
+<!-- ДУУ ТОГЛУУЛАХ -->
+<!-- ⭐ ЭНД ӨӨРИЙН ДУУНЫ URL/ЗАМЫГ ОРУУЛНА УУ ⭐ -->
+<!-- Жишээ: <audio id="bgMusic" loop src="my-song.mp3"></audio> -->
+<audio id="bgMusic" loop src="duu.mp3"></audio>
+
+<button class="music-toggle" id="musicToggle" aria-label="Дуу тоглуулах">♪</button>
+<div class="music-hint" id="musicHint">♪ Цэцэг тарихад дуу эхэлнэ</div>
+
+<div class="sky"></div>
+<div class="cloud cloud-1"></div>
+<div class="cloud cloud-2"></div>
+<div class="cloud cloud-3"></div>
+<div class="sun"></div>
+<div class="mountains"></div>
+<div class="ground"></div>
+
+<!-- Нээлтийн хэсэг -->
+<section class="opening">
+  <div class="ornament">❀ ❀ ❀</div>
+  <h1>Хайрт ээж минь</h1>
+  <h2>Төрсөн өдрийн мэнд хүргэе</h2>
+
+  <div class="portrait-frame">
+    <div class="corners">
+      <span class="corner tl"></span><span class="corner tr"></span>
+      <span class="corner bl"></span><span class="corner br"></span>
+    </div>
+    <img src="eej.png" alt="Хайрт ээж">
+  </div>
+
+  <p class="dedication">
+    Талын салхинд үсээ найгуулан, нар жаргах гэрэлд гэрэлтэн зогсох таны төрх — миний хамгийн их хайрладаг дүр зураг. Энэ өчүүхэн цэцэрлэг таны нэг насанд зориулагдсан.
+  </p>
+
+  <div class="scroll-hint">↓ Доош үргэлжлүүлнэ үү ↓</div>
+</section>
+
+<!-- Цэцэрлэгийн хэсэг -->
+<section class="garden-section">
+  <div class="garden-intro">
+    <div class="label">Цэцэрлэг</div>
+    <h3>Таны нэрэмжит есөн цэцэг</h3>
+    <p>
+      Доорх товчийг даран цэцгийг нэг нэгээр нь ургуулаагтун. Цэцэг бүр өөрийн гэсэн нэр, утгатай. Сүүлчийн цэцэг ургахад нэгэн шидэт зүйл болох болно.
+    </p>
+  </div>
+
+  <button class="plant-button" id="plantBtn">❀ Цэцэг тарих ❀</button>
+  <p class="counter"><span class="num" id="count">0</span> / 9 цэцэг ургаалаа</p>
+
+  <div class="garden" id="garden"></div>
+</section>
+
+<!-- Шидэт цэцэрлэг -->
+<div class="magical-overlay" id="magical">
+  <div class="magical-night"></div>
+  <div class="magical-stars" id="stars"></div>
+
+  <div class="magical-title">
+    <div class="ornament">✦ ✦ ✦</div>
+    <h2>Сүүлчийн бэлэг —<br>таны өөрийн чинь шидэт цэцэрлэг</h2>
+  </div>
+
+  <div class="magical-message">
+    <p></p>
+    <p class="signature">
+    
+    </p>
+  </div>
+
+  <div class="flowers-stage" id="flowersStage"></div>
+</div>
+
+<script>
+  /* ───────── 9 ЦЭЦЭГ ─────────  */
+  const flowers = [
+    {
+      name: "Сараана",
+      latin: "Lilium",
+      message: "Сараана цэцэг нь ээжийн минь уужуу тайван сэтгэл, энэрэнгүй зөөлөн төрхийг илтгэх мэт цэвэр ариун, гоо үзэсгэлэнгийн илэрхийлэл юм.",
+      colors: ['#e0a3b0', '#f4cdd4', '#a85968'], type: 'lily'
+    },
+    {
+      name: "Алтан зул",
+      latin: "Adonis mongolica",
+      message: "Ээж минь миний амьдралын цэцэрлэгт хэзээ ч гандашгүй, хамгийн тод өнгөтэй алтанзул цэцэг юм.",
+      colors: ['#f0c060', '#fad590', '#b8842c'], type: 'daisy'
+    },
+    {
+    name: "Цагаан хонгорзул",
+    latin: "Leontopodium",
+    message: "Уулын өндөрт ургадаг энэ цэцэг шиг та минь миний хувьд хамгийн нандин, эрхэм хүн. Хүү нь танаараа бахархахгүй өдөр гэж байдаггүй шүү.",
+    colors: ['#faf3e3', '#e8ddc3', '#a89870'], type: 'daisy'
+  },
+  {
+    name: "Башир",
+    latin: "Pulsatilla",
+    message: "Цас хайлаагүй байхад хамгийн түрүүнд цухуйдаг энэ цэцэг шиг та минь надад үргэлж урам өгдөг. Намайг хэцүү байхад 'миний хүү чадна аа' гэдэг таны үг л намайг босгодог юм.",
+    colors: ['#8b5a8c', '#ad7daf', '#6b4068'], type: 'tulip'
+  },
+  {
+    name: "Зэгсний цэцэг",
+    latin: "Iris",
+    message: "Голын эрэгт намуухан ганхах зэгс шиг таны минь тайван, ухаалаг зан надад үлгэр болдог. Хэлсэн үг бүрийг тань хүү нь дотроо үргэлж бодож явдаг шүү.",
+    colors: ['#4a7a7a', '#7ba3a3', '#345858'], type: 'lily'
+  },
+  {
+    name: "Жонон гарагтай",
+    latin: "Papaver",
+    message: "Талын дунд ганцаараа гэрэлтээд зогсож байгаа цэцэг шиг та өөрийгөө мартаад зөвхөн миний төлөө зүтгэсэн бүхнийг хүү нь сайн мэднэ ээ. Баярлалаа, ээж ээ.",
+    colors: ['#c97744', '#e09565', '#a55c30'], type: 'daisy'
+  },
+  {
+    name: "Тоонолжин",
+    latin: "Astragalus",
+    message: "Зам дагуу хаана ч ургаж байдаг энэ цэцэг шиг таны хайр намайг хаана ч явсан үргэлж дагаж, хамгаалж явдаг. Таны дэргэд байхад л хүү нь хамгийн тайван байдаг юм.",
+    colors: ['#b85450', '#d47670', '#943c38'], type: 'rose'
+  },
+  {
+    name: "Гүзээлзгэний цэцэг",
+    latin: "Fragaria",
+    message: "Жижигхэн цэцэг мөртлөө хамгийн амттай жимс өгдөг шиг, таны минь хийсэн жижигхэн зүйл бүхэн миний амьдралыг жаргалтай болгодог. Ээжийнхээ өвөрт ороод хэвтэх шиг сайхан газар хаана ч байхгүй.",
+    colors: ['#d4a04c', '#e8c576', '#b8842c'], type: 'rose'
+  },
+  {
+    name: "Тэнгэрийн цэцэг",
+    latin: "Gentiana",
+    message: "Уулын оройд харагддаг тэр гүн цэнхэр цэцэг шиг та минь юугаар ч сольшгүй ховорхон хүн. Та минь хүүдээ байгаа хамгийн нандин эрдэнэ шүү.",
+    colors: ['#39c6d6', '#a7ffee', '#14757a'], type: 'magical'
+  }
+  ];
+
+  // SVG цэцэг үүсгэх
+  function makeFlower(idx) {
+    const f = flowers[idx];
+    const [c1, c2, c3] = f.colors;
+
+    if (f.type === 'magical') {
+      // Сүүлчийн цэцэг — гэрэлтэх хэлбэртэй
+      let petals = '';
+      for (let i = 0; i < 8; i++) {
+        const angle = (i * 45);
+        petals += `<ellipse class="petal" style="--ox:90px;--oy:80px;--r:${angle}deg;animation-delay:${1 + i*0.05}s"
+          cx="90" cy="50" rx="11" ry="24" fill="${c2}" stroke="${c3}" stroke-width="0.5" opacity="0.85"
+          transform="rotate(${angle} 90 80)"/>`;
+      }
+      return `<svg class="flower-svg" viewBox="0 0 180 220" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="glow${idx}">
+            <stop offset="0%" stop-color="#fff" stop-opacity="0.8"/>
+            <stop offset="100%" stop-color="${c1}" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <circle cx="90" cy="80" r="60" fill="url(#glow${idx})" class="center" style="animation-delay:0.5s"/>
+        <path class="stem" d="M 90 220 Q 88 160, 92 110 Q 95 90, 90 80"
+          stroke="${c3}" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        <path class="leaf" style="--ox:90px;--oy:160px;animation-delay:0.7s"
+          d="M 90 160 Q 65 150, 55 165 Q 60 175, 90 170 Z" fill="${c3}" stroke="${c3}" stroke-width="1"/>
+        <path class="leaf" style="--ox:92px;--oy:130px;animation-delay:0.9s"
+          d="M 92 130 Q 117 120, 127 135 Q 122 145, 92 140 Z" fill="${c3}" stroke="${c3}" stroke-width="1"/>
+        ${petals}
+        <circle class="center" cx="90" cy="80" r="9" fill="${c1}" stroke="${c3}" stroke-width="1"/>
+        <circle class="center" style="animation-delay:1.7s" cx="90" cy="80" r="5" fill="#fff" opacity="0.9"/>
+      </svg>`;
+    } else if (f.type === 'daisy') {
+      let petals = '';
+      for (let i = 0; i < 8; i++) {
+        const angle = (i * 45);
+        petals += `<ellipse class="petal" style="--ox:90px;--oy:80px;--r:${angle}deg;animation-delay:${1 + i*0.05}s"
+          cx="90" cy="50" rx="10" ry="22" fill="${c2}" stroke="${c3}" stroke-width="0.5"
+          transform="rotate(${angle} 90 80)"/>`;
+      }
+      return `<svg class="flower-svg" viewBox="0 0 180 220" xmlns="http://www.w3.org/2000/svg">
+        <path class="stem" d="M 90 220 Q 88 160, 92 110 Q 95 90, 90 80"
+          stroke="#5a7a3a" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        <path class="leaf" style="--ox:90px;--oy:160px;animation-delay:0.7s"
+          d="M 90 160 Q 65 150, 55 165 Q 60 175, 90 170 Z" fill="#7a9a4a" stroke="#5a7a3a" stroke-width="1"/>
+        <path class="leaf" style="--ox:92px;--oy:130px;animation-delay:0.9s"
+          d="M 92 130 Q 117 120, 127 135 Q 122 145, 92 140 Z" fill="#7a9a4a" stroke="#5a7a3a" stroke-width="1"/>
+        ${petals}
+        <circle class="center" cx="90" cy="80" r="9" fill="${c1}" stroke="${c3}" stroke-width="1"/>
+        <circle class="center" style="animation-delay:1.7s" cx="90" cy="80" r="5" fill="${c3}" opacity="0.7"/>
+      </svg>`;
+    } else if (f.type === 'rose' || f.type === 'lily') {
+      return `<svg class="flower-svg" viewBox="0 0 180 220" xmlns="http://www.w3.org/2000/svg">
+        <path class="stem" d="M 90 220 Q 92 160, 88 110 Q 86 90, 90 78"
+          stroke="#5a7a3a" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        <path class="leaf" style="--ox:88px;--oy:155px;animation-delay:0.7s"
+          d="M 88 155 Q 60 145, 50 162 Q 58 173, 88 165 Z" fill="#7a9a4a" stroke="#5a7a3a" stroke-width="1"/>
+        <path class="leaf" style="--ox:90px;--oy:125px;animation-delay:0.9s"
+          d="M 90 125 Q 120 118, 128 132 Q 122 142, 90 135 Z" fill="#7a9a4a" stroke="#5a7a3a" stroke-width="1"/>
+        <path class="petal" style="--ox:90px;--oy:80px;animation-delay:1s"
+          d="M 90 80 Q 65 65, 70 85 Q 75 100, 90 95 Z" fill="${c2}" opacity="0.85"/>
+        <path class="petal" style="--ox:90px;--oy:80px;animation-delay:1.1s"
+          d="M 90 80 Q 115 65, 110 85 Q 105 100, 90 95 Z" fill="${c2}" opacity="0.85"/>
+        <path class="petal" style="--ox:90px;--oy:80px;animation-delay:1.2s"
+          d="M 90 80 Q 75 55, 90 50 Q 105 55, 90 80 Z" fill="${c1}" opacity="0.9"/>
+        <path class="petal" style="--ox:90px;--oy:80px;animation-delay:1.3s"
+          d="M 90 80 Q 78 75, 78 88 Q 90 92, 90 80 Z" fill="${c3}"/>
+        <path class="petal" style="--ox:90px;--oy:80px;animation-delay:1.4s"
+          d="M 90 80 Q 102 75, 102 88 Q 90 92, 90 80 Z" fill="${c3}"/>
+        <circle class="center" cx="90" cy="80" r="3" fill="${c3}" opacity="0.9"/>
+      </svg>`;
+    } else {
+      // tulip
+      return `<svg class="flower-svg" viewBox="0 0 180 220" xmlns="http://www.w3.org/2000/svg">
+        <path class="stem" d="M 90 220 Q 88 165, 90 115 Q 92 95, 90 85"
+          stroke="#5a7a3a" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        <path class="leaf" style="--ox:90px;--oy:170px;animation-delay:0.7s"
+          d="M 90 170 Q 55 130, 45 180 Q 50 195, 90 180 Z" fill="#7a9a4a" stroke="#5a7a3a" stroke-width="1"/>
+        <path class="leaf" style="--ox:90px;--oy:160px;animation-delay:0.9s"
+          d="M 90 160 Q 125 120, 135 175 Q 130 192, 90 175 Z" fill="#7a9a4a" stroke="#5a7a3a" stroke-width="1"/>
+        <path class="petal" style="--ox:90px;--oy:85px;animation-delay:1s"
+          d="M 70 85 Q 70 50, 90 45 Q 110 50, 110 85 Q 100 92, 90 90 Q 80 92, 70 85 Z"
+          fill="${c2}" stroke="${c3}" stroke-width="1"/>
+        <path class="petal" style="--ox:90px;--oy:85px;animation-delay:1.2s"
+          d="M 78 85 Q 78 55, 90 50 Q 102 55, 102 85 Q 96 88, 90 87 Q 84 88, 78 85 Z"
+          fill="${c1}" opacity="0.9"/>
+        <path class="petal" style="--ox:90px;--oy:85px;animation-delay:1.4s"
+          d="M 86 85 Q 86 60, 90 55 Q 94 60, 94 85 Z" fill="${c3}" opacity="0.6"/>
+      </svg>`;
+    }
+  }
+
+  /* ───────── ШИДЭТ ЦЭЦЭРЛЭГ ─────────  */
+  function buildMagicalGarden() {
+    const stage = document.getElementById('flowersStage');
+    stage.innerHTML = `
+      <div class="mflower mflower--1">
+        <div class="mflower__leafs mflower__leafs--1">
+          <div class="mflower__leaf mflower__leaf--1"></div>
+          <div class="mflower__leaf mflower__leaf--2"></div>
+          <div class="mflower__leaf mflower__leaf--3"></div>
+          <div class="mflower__leaf mflower__leaf--4"></div>
+          <div class="mflower__white-circle"></div>
+          ${[1,2,3,4,5,6,7,8].map(i=>`<div class="mflower__light mflower__light--${i}"></div>`).join('')}
+        </div>
+        <div class="mflower__line">
+          ${[1,2,3,4,5,6].map(i=>`<div class="mflower__line__leaf mflower__line__leaf--${i}"></div>`).join('')}
+        </div>
+      </div>
+      <div class="mflower mflower--2">
+        <div class="mflower__leafs mflower__leafs--2">
+          <div class="mflower__leaf mflower__leaf--1"></div>
+          <div class="mflower__leaf mflower__leaf--2"></div>
+          <div class="mflower__leaf mflower__leaf--3"></div>
+          <div class="mflower__leaf mflower__leaf--4"></div>
+          <div class="mflower__white-circle"></div>
+          ${[1,2,3,4,5,6,7,8].map(i=>`<div class="mflower__light mflower__light--${i}"></div>`).join('')}
+        </div>
+        <div class="mflower__line">
+          ${[1,2,3,4].map(i=>`<div class="mflower__line__leaf mflower__line__leaf--${i}"></div>`).join('')}
+        </div>
+      </div>
+      <div class="mflower mflower--3">
+        <div class="mflower__leafs mflower__leafs--3">
+          <div class="mflower__leaf mflower__leaf--1"></div>
+          <div class="mflower__leaf mflower__leaf--2"></div>
+          <div class="mflower__leaf mflower__leaf--3"></div>
+          <div class="mflower__leaf mflower__leaf--4"></div>
+          <div class="mflower__white-circle"></div>
+          ${[1,2,3,4,5,6,7,8].map(i=>`<div class="mflower__light mflower__light--${i}"></div>`).join('')}
+        </div>
+        <div class="mflower__line">
+          ${[1,2,3,4].map(i=>`<div class="mflower__line__leaf mflower__line__leaf--${i}"></div>`).join('')}
+        </div>
+      </div>
+      <div class="growing-grass">
+        <div class="mflower__grass mflower__grass--1">
+          <div class="mflower__grass--top"></div>
+          <div class="mflower__grass--bottom"></div>
+          ${[1,2,3,4,5,6,7,8].map(i=>`<div class="mflower__grass__leaf mflower__grass__leaf--${i}"></div>`).join('')}
+          <div class="mflower__grass__overlay"></div>
+        </div>
+      </div>
+      <div class="growing-grass">
+        <div class="mflower__grass mflower__grass--2">
+          <div class="mflower__grass--top"></div>
+          <div class="mflower__grass--bottom"></div>
+          ${[1,2,3,4,5,6,7,8].map(i=>`<div class="mflower__grass__leaf mflower__grass__leaf--${i}"></div>`).join('')}
+          <div class="mflower__grass__overlay"></div>
+        </div>
+      </div>
+    `;
+
+    // Од үүсгэх
+    const stars = document.getElementById('stars');
+    stars.innerHTML = '';
+    for (let i = 0; i < 60; i++) {
+      const star = document.createElement('div');
+      star.className = 'star';
+      star.style.left = Math.random() * 100 + '%';
+      star.style.top = Math.random() * 70 + '%';
+      star.style.animationDelay = Math.random() * 3 + 's';
+      stars.appendChild(star);
+    }
+  }
+
+  /* ───────── ҮНДСЭН ЛОГИК ─────────  */
+  let plantedCount = 0;
+  const plantBtn = document.getElementById('plantBtn');
+  const garden = document.getElementById('garden');
+  const counter = document.getElementById('count');
+  const counterEl = document.querySelector('.counter');
+  const magical = document.getElementById('magical');
+
+  plantBtn.addEventListener('click', () => {
+    if (plantedCount >= flowers.length) return;
+
+    // Эхний цэцэг тарих үед дуу автоматаар эхлэх
+    if (plantedCount === 0 && !isPlaying) {
+      music.play().then(() => {
+        isPlaying = true;
+        musicBtn.classList.add('playing');
+        musicBtn.textContent = '❚❚';
+        musicHint.style.display = 'none';
+      }).catch(() => {
+        // Хэрэв дуу тоглохгүй бол анхааруулах хэрэггүй, чимээгүй өнгөрнө
+      });
+    }
+
+    const f = flowers[plantedCount];
+    const card = document.createElement('div');
+    card.className = 'flower-card';
+
+    card.innerHTML = `
+      ${makeFlower(plantedCount)}
+      <div class="message-box">
+        <div class="ornament-small">❀</div>
+        <div class="flower-name">${f.name}</div>
+        <div class="flower-latin">${f.latin}</div>
+        <div class="text">${f.message}</div>
+      </div>
+    `;
+
+    garden.appendChild(card);
+    plantedCount++;
+    counter.textContent = plantedCount;
+
+    // Товчийг тарьсан цэцгийн араас шилжүүлэх
+    card.appendChild(plantBtn);
+    card.appendChild(counterEl);
+
+    setTimeout(() => {
+      plantBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 600);
+
+    if (plantedCount >= flowers.length) {
+      plantBtn.textContent = '✦ Бүх цэцэг ургалаа ✦';
+      plantBtn.disabled = true;
+      // 3 секундын дараа шидэт цэцэрлэг нээх
+      setTimeout(() => {
+        buildMagicalGarden();
+        magical.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }, 3000);
+    }
+  });
+
+  /* ───────── ДУУ ─────────  */
+  const music = document.getElementById('bgMusic');
+  const musicBtn = document.getElementById('musicToggle');
+  const musicHint = document.getElementById('musicHint');
+  let isPlaying = false;
+
+  musicBtn.addEventListener('click', () => {
+    const src = music.getAttribute('src');
+    if (!src || src.trim() === '') {
+      musicHint.style.display = 'block';
+      musicHint.style.animation = 'none';
+      musicHint.style.opacity = '1';
+      musicHint.textContent = '⚠ HTML дотор дууны замыг оруулаагүй байна';
+      setTimeout(() => {
+        musicHint.style.transition = 'opacity 1s';
+        musicHint.style.opacity = '0';
+      }, 3000);
+      return;
+    }
+    if (isPlaying) {
+      music.pause();
+      musicBtn.classList.remove('playing');
+      musicBtn.textContent = '♪';
+    } else {
+      music.play().catch(() => {});
+      musicBtn.classList.add('playing');
+      musicBtn.textContent = '❚❚';
+    }
+    isPlaying = !isPlaying;
+    musicHint.style.display = 'none';
+  });
+</script>
+
+</body>
+</html>
